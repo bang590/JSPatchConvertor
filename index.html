@@ -1,47 +1,119 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Jspatchconvertor by bang590</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Jspatchconvertor</h1>
-      <h2 class="project-tagline">JSPatch Convertor automatically converts Objective-C code to JSPatch script.</h2>
-      <a href="https://github.com/bang590/JSPatchConvertor" class="btn">View on GitHub</a>
-      <a href="https://github.com/bang590/JSPatchConvertor/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/bang590/JSPatchConvertor/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+<html>
+<head>
+    <title>JSPatch Convertor</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+    <link rel="icon" type="image/png" href="./img/favicon.png">
+</head>
+<body>
+    <div class="main" id="main">
+        <h1>JSPatch Convertor</h1>
+        <div id="loading">Loading ... </div>
+        <div id="convertor">
+            <div class="textarea-ctn">
+                <div class="item" id="objcItem">
+                    <h2 class="title-oc">OC</h2>
+                    <textarea id="objcTextarea" wrap="off"></textarea>
+                </div>
+                <div class="item" id="jsItem">
+                    <h2 class="title-js">JS</h2>
+                    <textarea id="jsTextarea" wrap="off"></textarea>
+                    <div class="error-tips" id="errorTips">Syntax Error</div>
+                </div>
+            </div>
+            <div class="action">
+                <a href="javascript:void(0)" id="convertBtn">Convert</a>
+            </div>
+        </div>
+    </div>
+    <div class="intro">
+        <div class="wrapper">
+            <div class="whats-jspatch">
+                <h3>What's JSPatch Convertor</h3>
+                <p><a href="https://github.com/bang590/JSPatch">JSPatch</a> bridges Objective-C and JavaScript using the Objective-C runtime. You can call any Objective-C class and method in JavaScript by just including a small engine. That makes the APP obtaining the power of script language: add modules or replacing Objective-C code to fix bugs dynamically.</p>
+                <p>JSPatch Convertor is a tool that converts Objective-C code to JSPatch script automatically.</p>
+            </div>
+            <div class="supported">
+                <div class="icon">✓</div>
+                <h3>SUPPORTED</h3>
+                <ul>
+                    <li>Method declaration</li>
+                    <li>Method calling</li>
+                    <li>Block syntax</li>
+                    <li>Variable declaration</li>
+                    <li>Getting/Setting Property</li>
+                    <li>NSString / NSArray / nil ...</li>
+                </ul>
+            </div>
+            <div class="unsupported">
+                <div class="icon">✕</div>
+                <h3>UNSUPPORTED</h3>
+                <ul>
+                    <li>Macro / constant variable / Enum</li>
+                    <li>C function calling</li>
+                    <li>GCD functions</li>
+                    <li>Pointer / Struct</li>
+                    <li>Getting / Setting private variable</li>
+                </ul>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="footer">
+        Code licensed under MIT. <a href="https://github.com/bang590/JSPatchConvertor">Fork JSPatch-Convertor on github</a>
+    </div>
+    <script>
+        function $(id) {
+            return document.getElementById(id)
+        }
+        var minHeight = 570;
+        if (document.body.clientHeight > minHeight) {
+            $('main').style.height = document.body.clientHeight + 'px';
+            $('objcItem').style.height = document.body.clientHeight - 240 + 'px';
+            $('jsItem').style.height = document.body.clientHeight - 240 + 'px';
+            $('jsTextarea').style.height = document.body.clientHeight - 270 + 'px';
+            $('objcTextarea').style.height = document.body.clientHeight - 270 + 'px';
+        }
+    </script>
+    <script src="./js/lib/require.js"></script>
+    <script>
+    window.onload = function() {
+        var sampleScript = [
+            '@implementation SampleClass',
+            '- (void)requestUrl:(NSString *)url param:(NSDictionary *)dict callback:(JPCallback)callback {',
+            '    JPRequest *obj = [[JPRequest alloc] initWithUrl:url param:dict];',
+            '    obj.successBlock = ^(id data, NSError *err) {',
+            '        NSString *content = [JPParser parseData:data];',
+            '        if (callback) callback(@{',
+            '            @"content": content',
+            '        }, err);',
+            '        [self.dataSource refresh];',
+            '        self.handleRequestSuccess(data);',
+            '    };',
+            '}',
+            '@end',
+        ].join('\n');
 
-    <section class="main-content">
-      <h1>
-<a id="jspatchconvertor" class="anchor" href="#jspatchconvertor" aria-hidden="true"><span class="octicon octicon-link"></span></a>JSPatchConvertor</h1>
+        $('objcTextarea').value = sampleScript;
+        
+        var convertor = require('./js/JPConvertor').convertor
 
-<p>JSPatch Convertor automatically converts Objective-C code to JSPatch script.</p>
+        $('convertBtn').onclick = function() {
+            var script = $('objcTextarea').value.replace('\n', '')
+            $('errorTips').style.display = "none";
+            convertor(script, function(result, error) {
+                if (error) {
+                    $('errorTips').style.display = "block";
+                    console.error(error)
+                }
+                $('jsTextarea').value = result;
+            });
+        }
+        $('objcTextarea').focus();
+        $('loading').style.display = "none";
+        $('convertor').style.display = "block";
+    }
+    </script>
+</body>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/bang590/JSPatchConvertor">Jspatchconvertor</a> is maintained by <a href="https://github.com/bang590">bang590</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-            <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-1895639-11");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
-  </body>
 </html>
