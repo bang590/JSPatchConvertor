@@ -81,6 +81,7 @@
         var sampleScript = [
             '@implementation SampleClass',
             '- (void)requestUrl:(NSString *)url param:(NSDictionary *)dict callback:(JPCallback)callback {',
+            '    [super requestUrl:url param:dict callback:callback];',
             '    JPRequest *obj = [[JPRequest alloc] initWithUrl:url param:dict];',
             '    obj.successBlock = ^(id data, NSError *err) {',
             '        NSString *content = [JPParser parseData:data];',

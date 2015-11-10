@@ -25,8 +25,12 @@ JPScriptProcessor.prototype = {
         this.script = this.script.replace(/\|__dot__\|/g, '.');
         return this;
     },
+    replaceSuper: function() {
+        this.script = this.script.replace(/(super\.)/g, 'self.super().');
+        return this;
+    },
     finalScript: function() {
-        this.stripSymbolAt().processPropertyGetter().restoreDot().replaceNil().beautify();
+        this.stripSymbolAt().processPropertyGetter().restoreDot().replaceNil().replaceSuper().beautify();
         return this.script;
     }
 }
