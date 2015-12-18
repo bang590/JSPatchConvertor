@@ -9,6 +9,10 @@ Check out [http://bang590.github.io/JSPatchConvertor](http://bang590.github.io/J
 
 Please use Chrome or Safari.
 
+#####Advice: You can also download Mac Application:
+
+Click: https://github.com/DevSonw/JSPatchConvertor/blob/gh-pages/JSPatchConvertor.zip
+
 ##Supported
 
 The Objective-C syntax below is supported to convert：
