@@ -2,9 +2,29 @@ var beautify = require('./lib/beautify').js_beautify
 
 var JPScriptProcessor = function(script) {
     this.script = script;
+    this.stringPair = {};
 }
 
 JPScriptProcessor.prototype = {
+    replaceString: function() {
+        var regex = /"(?:\\"|[^"])*"/g;
+        var index = 0;
+        this.stringPair = {};
+        var self = this;
+        this.script = this.script.replace(regex, function (result) {
+            var replacement = '###' + index.toString() + '#####';
+            self.stringPair[replacement] = result;
+            index++;
+            return replacement;
+        })
+        return this;
+    },
+    restoreString: function() {
+        for (var replacement in this.stringPair) {
+            this.script = this.script.replace(replacement, this.stringPair[replacement]);
+        }
+        return this;
+    },
     stripSymbolAt: function() {
         this.script = this.script.replace(/\@(\[)|\@(\")|\@(\{)|\@(\()/g, "$1$2$3$4");
         return this;
@@ -30,7 +50,7 @@ JPScriptProcessor.prototype = {
         return this;
     },
     finalScript: function() {
-        this.stripSymbolAt().processPropertyGetter().restoreDot().replaceNil().replaceSuper().beautify();
+        this.stripSymbolAt().replaceString().processPropertyGetter().restoreDot().replaceNil().replaceSuper().restoreString().beautify();
         return this.script;
     }
 }
