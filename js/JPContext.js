@@ -63,7 +63,7 @@ JPClassContext.prototype.parse = function(){
 	}
 	script += this.ignore ? '' : '}';
 	if (this.classMethods.length) {
-		script += this.ignore ? '' : '{';
+		script += this.ignore ? '' : ',{';
 		for (var i = 0; i < this.classMethods.length; i ++) {
 			var separator = this.ignore && this.classMethods.length <= 1 ? '': ','
 			script += this.classMethods[i].parse() + separator;
