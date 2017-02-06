@@ -85,7 +85,16 @@ var JPMethodContext = function() {
 JPMethodContext.prototype = Object.create(JPContext.prototype);
 JPMethodContext.prototype.parse = function(){
 	var ctx = this;
-	var script = this.ignore ? '' : this.names.join('_') + ": function(" + this.params.join(',') + ") {"
+	var script = ''
+	if (!this.ignore) {
+		var firstName = this.names[0]
+		if (firstName[0] == '_') {
+			// 处理下划线开头函数名
+			firstName = "_" + firstName;
+			this.names[0] = firstName;
+		}
+		script = this.names.join('_') + ": function(" + this.params.join(',') + ") {"
+	}
 
 	while (ctx = ctx.next) {
 		script += ctx.parse();
