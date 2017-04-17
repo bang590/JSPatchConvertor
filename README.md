@@ -1,23 +1,23 @@
-#JSPatch Convertor
+# JSPatch Convertor
 
 JSPatch Convertor is a tool that converts Objective-C code to JSPatch script automatically.   
 ( [What's JSPatch?](https://github.com/bang590/JSPatch) )
 
-##Usage
+## Usage
 
 Check out [http://bang590.github.io/JSPatchConvertor](http://bang590.github.io/JSPatchConvertor)
 
 Please use Chrome or Safari.
 
-#####Advice: You can also download Mac Application:
+##### Advice: You can also download Mac Application:
 
 Click: https://github.com/DevSonw/JSPatchConvertor/blob/gh-pages/JSPatchConvertor.zip
 
-##Supported
+## Supported
 
 The Objective-C syntax below is supported to convert：
 
-####Method declaration
+#### Method declaration
 ```objc
 - (void)requestUrl:(NSString *)url param:(NSDictionary *)dict {}
 ```
@@ -25,7 +25,7 @@ The Objective-C syntax below is supported to convert：
 requestUrl_param: function(url, dict) {}
 ```
 
-####Method calling
+#### Method calling
 ```objc
 [[JPRequest alloc] initWithUrl:url param:dict];
 ```
@@ -33,7 +33,7 @@ requestUrl_param: function(url, dict) {}
 JPRequest.alloc().initWithUrl_param(url, dict);
 ```
 
-####Block syntax
+#### Block syntax
 ```objc
 [JPRquest handleCallback:^(id data, NSError *err) {}];
 ```
@@ -42,7 +42,7 @@ JPRquest.handleCallback(block('id,NSError*', function(data, err) {}));
 ```
 
 
-####Variable declaration
+#### Variable declaration
 ```objc
 NSString *str = @"content";
 ```
@@ -50,7 +50,7 @@ NSString *str = @"content";
 var str = "content";
 ```
 
-####Getting/Setting Property
+#### Getting/Setting Property
 ```objc
 self.handler.successBlock(data);
 self.handler.data = [[JPData alloc] init];
@@ -60,7 +60,7 @@ self.handler().successBlock()(data);
 self.handler().setData(JPData.alloc().init());
 ```
 
-####NSString / NSArray / nil ...
+#### NSString / NSArray / nil ...
 ```objc
 NSDictionary *dict = nil;
 dict = @{
@@ -74,7 +74,7 @@ dict = {
 };
 ```
 
-#Unsupported
+# Unsupported
 
 JSPatch Convertor didn't support the Objective-C / C syntax below, you should modify it manually after converted:
 
